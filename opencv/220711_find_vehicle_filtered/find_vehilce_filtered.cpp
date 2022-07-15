@@ -8,6 +8,8 @@
 //#include <sensor_msgs/image_encoding.h>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <std_msgs/String.h>
+#include <sstream>
 
 #define GRADIENT_THRESHOLD 0.1
 #define MIN_RECT_AREA 300
@@ -67,7 +69,6 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         }
 
         // cv::imshow("drawing", drawing);
-
         boundRect2.resize(refinery_count);
         cv::imshow("hi2", real_img);
 
@@ -139,8 +140,9 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
                 ROI_img.copyTo(test);
                 cv::cvtColor(test, test, cv::COLOR_RGB2GRAY);
                 cv::GaussianBlur(test, test, cv::Size(5, 5), 0);
+                // median blur 가 더 낫다. 선의 경계선 유지.
                 cv::Mat test_thresh;
-                //cv::threshold(test, test_thresh, 100, 255, cv::THRESH_BINARY);
+                //cv::threshold(test, test_thresh, 110, 255, cv::THRESH_BINARY);
 
                 cv::adaptiveThreshold(test, test_thresh, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 19, 9);
 

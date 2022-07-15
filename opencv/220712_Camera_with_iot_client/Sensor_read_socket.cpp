@@ -44,7 +44,9 @@ int main(int argc, char* argv[])
 	struct sockaddr_in serv_addr;
 	pthread_t snd_thread, rcv_thread;
 	void* thread_return;
-
+	if (argc != 2) {
+		printf("")
+	}
 	sprintf(name, "%s", "Jetson1");
 	pass.sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == -1)

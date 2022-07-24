@@ -86,10 +86,10 @@ int main(int argc, char* argv[]) {
             char newChar = serialGetchar(fd);  //fd가 핸들러임.
 
             //if (1) {
-            if(newChar == 'S'){
-                                    // 이미지 처리 진행
-                    //system(capture);
-                //printf("agasdfa\n");
+            if (newChar == 'S') {
+                // 이미지 처리 진행
+//system(capture);
+//printf("agasdfa\n");
                 double ratio_d, delta_x, delta_y, gradient;
                 int select, plate_width, plate_height, count, friend_count = 0, refinery_count = 0;
 
@@ -373,7 +373,7 @@ int main(int argc, char* argv[]) {
                 //==============================
 
                 char spot[10] = "";
-                int inout=-1;
+                int inout = -1;
 
                 memset(temp, 0, sizeof(temp));
                 sprintf(temp, "select * from now_stat");
@@ -397,7 +397,7 @@ int main(int argc, char* argv[]) {
                     printf("Search Spot Fail\n");
                 }
 
-                if (inout ==0) {
+                if (inout == 0) {
                     printf("Out. ByeBye..\n");
                     inout = 0;
                 }
@@ -453,7 +453,7 @@ int main(int argc, char* argv[]) {
                 else {
                     sprintf(temp, "update now_stat set STATUS = %d, CARNUM = %d where SPOT = '%s'", inout, 0, spot);
                 }
-                
+
                 res = mysql_query(conn, temp);
                 if (!res) {
                     printf("update OK\n");
@@ -469,7 +469,7 @@ int main(int argc, char* argv[]) {
                 //==============================
 
                 memset(temp, 0, sizeof(temp));
-                sprintf(temp, "insert into parkinglot_log(ID,CARNUM,SPOT,IN_OUT) values (null,'%s','%s',%d)", number_back, spot,inout);
+                sprintf(temp, "insert into parkinglot_log(ID,CARNUM,SPOT,IN_OUT) values (null,'%s','%s',%d)", number_back, spot, inout);
 
                 res = mysql_query(conn, temp);
                 if (!res)
@@ -483,7 +483,7 @@ int main(int argc, char* argv[]) {
                 //==============================
 
                 char send_msg[40] = "";
-                sprintf(send_msg, "%d@%s@%d@%sL", inout,number_back, type, spot);
+                sprintf(send_msg, "%d@%s@%d@%sL", inout, number_back, type, spot);
                 int i = 0;
                 printf("sending start\n");
                 while (send_msg[i] != '\0') {
@@ -513,14 +513,17 @@ int main(int argc, char* argv[]) {
                     printf("connect() error");
 
                 memset(msg, 0, sizeof(msg));
-                sprintf(msg, "[BLOCK:PASSWD]");
+                sprintf(msg, "[block:PASSWD]");
                 write(sock, msg, strlen(msg));
-                
+                char c_inout;
                 if (inout == 0) {
-                    send_msg[0] = '0';  // 가끔 Null로 인식되는 경우가 있어서 재정의
+                    c_inout = '0'; // 가끔 Null로 인식되는 경우가 있어서 재정의
+                }
+                else {
+                    c_inout = '1';
                 }
                 memset(msg, 0, sizeof(msg));
-                sprintf(msg, "[SPOT1]%s\n", send_msg);
+                sprintf(msg, "[%s] %c@%s@%dL\n", spot, c_inout, number_back, type);
                 write(sock, msg, strlen(msg));
                 close(sock);
 

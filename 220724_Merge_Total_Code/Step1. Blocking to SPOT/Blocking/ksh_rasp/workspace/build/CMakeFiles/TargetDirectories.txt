@@ -1,0 +1,4 @@
+/home/kshksh/ksh_rasp/workspace/build/CMakeFiles/rebuild_cache.dir
+/home/kshksh/ksh_rasp/workspace/build/CMakeFiles/edit_cache.dir
+/home/kshksh/ksh_rasp/workspace/build/CMakeFiles/Capture_with_socket.dir
+/home/kshksh/ksh_rasp/workspace/build/CMakeFiles/Capture.dir

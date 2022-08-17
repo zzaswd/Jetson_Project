@@ -276,34 +276,34 @@ int main(int argc, char *argv[]){
                 cv::merge(Merge_crop, 3, new_croped);
                 cv::imshow("Before mor", new_croped);  // Save the result
 
-                //=============================
+              //=============================
                 // Morphology Start
                 //==============================
 
+                cv::Mat img_dilate;
+                cv::dilate(cropped_image, img_dilate, cv::Mat(), cv::Point(-1, -1), 1);
+                cv::Mat Merge_dilate[] = { img_dilate,img_dilate,img_dilate };
+                cv::Mat dilate_merge;
+                cv::merge(Merge_dilate, 3, dilate_merge);
+
                 cv::Mat img_erode;
                 //cv::erode(test_thresh, img_erode, cv::Mat());
-                cv::erode(cropped_image, img_erode, cv::Mat::ones(cv::Size(3, 3), CV_8UC1), cv::Point(-1, -1), 1);
+                cv::erode(img_dilate, img_erode, cv::Mat::ones(cv::Size(3, 3), CV_8UC1), cv::Point(-1, -1), 1);
 
                 cv::Mat Merge_erode[] = { img_erode,img_erode,img_erode };
                 cv::Mat erode_merge;
                 cv::merge(Merge_erode, 3, erode_merge);
                 // cv::imshow("After erode", erode_merge);
 
-                cv::Mat img_dilate;
-                cv::dilate(img_erode, img_dilate, cv::Mat(), cv::Point(-1, -1), 1);
-                cv::Mat Merge_dilate[] = { img_dilate,img_dilate,img_dilate };
-                cv::Mat dilate_merge;
-                cv::merge(Merge_dilate, 3, dilate_merge);
 
                 cv::Mat img_erode2;
                 //cv::erode(test_thresh, img_erode, cv::Mat());
-                cv::erode(img_dilate, img_erode2, cv::Mat::ones(cv::Size(3, 3), CV_8UC1), cv::Point(-1, -1), 1);
+                cv::erode(img_erode, img_erode2, cv::Mat::ones(cv::Size(3, 3), CV_8UC1), cv::Point(-1, -1), 1);
 
                 cv::Mat Merge_erode2[] = { img_erode2,img_erode2,img_erode2 };
                 cv::Mat erode_merge2;
                 cv::merge(Merge_erode2, 3, erode_merge2);
 
-                cv::imshow("After Mop", erode_merge2);
               
                 //=============================
                 // OCR Start

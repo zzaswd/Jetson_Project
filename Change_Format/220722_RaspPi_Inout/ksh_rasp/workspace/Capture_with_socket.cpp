@@ -82,9 +82,9 @@ int main(int argc, char *argv[]){
         return 1;
 
     while(1){
-        if(serialDataAvail(fd)){
-			char newChar = serialGetchar(fd);  //fd가 핸들러임.
-
+     //   if(serialDataAvail(fd)){
+//			char newChar = serialGetchar(fd);  //fd가 핸들러임.
+	if(1){
             if (1) {
             //if(newChar == 'S'){
 								// 이미지 처리 진행
@@ -95,6 +95,12 @@ int main(int argc, char *argv[]){
 
                 cv::Mat origin_img = cv::imread(argv[1], 0);
                 cv::Mat gray_img;
+
+                cv::Mat gray_merge;
+                cv::Mat Merge_gray[] = { origin_img,origin_img,origin_img };
+                cv::merge(Merge_gray, 3, gray_merge);
+                cv::imshow("origin_img", gray_merge);
+
 
                 origin_img.copyTo(gray_img);
 
@@ -112,6 +118,9 @@ int main(int argc, char *argv[]){
                 cv::equalizeHist(gray_img, gray_img);
                 medianBlur(gray_img, gray_img, 3);
           
+                cv::Mat copy_gray;
+                gray_img.copyTo(copy_gray);
+
                 cv::Mat Canny_img;
 
                 cv::Canny(gray_img, Canny_img, 50, 150, 3);
@@ -230,14 +239,18 @@ int main(int argc, char *argv[]){
                     }
                 }
 
-
+                cv::Mat hist_img;
+                cv::Mat Merge_hist[] = { gray_img,gray_img,gray_img };
+                cv::merge(Merge_hist, 3, hist_img);
+                cv::imshow("After Processing", hist_img);
 
                 //=============================
                 // Rotation Image for improved Recognize OCR
                 //==============================
                 cv::Mat Rotated_image;
                 cv::Mat cropped_image;
-                origin_img.copyTo(Rotated_image);
+                copy_gray.copyTo(Rotated_image);
+                //origin_img.copyTo(Rotated_image);
                 cv::Point center1 = (carNumber[0].tl() + carNumber[0].br()) * 0.5;  // Center of the first number
                 cv::Point center2 = (carNumber[carNumber.size() - 1].tl() + carNumber[carNumber.size() - 1].br()) * 0.5;  // Center of the last number
                 int plate_center_x = (int)(center1.x + center2.x) * 0.5;    // X-coordinate at the Center of car plate
@@ -270,7 +283,7 @@ int main(int argc, char *argv[]){
                 //=============================
                 // Filtered Cropped image
                 //==============================
-                cv::GaussianBlur(cropped_image, cropped_image, cv::Size(5, 5), 0);
+                //cv::GaussianBlur(cropped_image, cropped_image, cv::Size(5, 5), 0);
                 cv::adaptiveThreshold(cropped_image, cropped_image, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 19, 9);
                 //threshold(cropped_image, cropped_image, 127, 255, 0);
 
@@ -473,7 +486,7 @@ int main(int argc, char *argv[]){
                 write(sock, msg, strlen(msg));
 
                 memset(msg, 0, sizeof(msg));
-                sprintf(msg, "[Jetson1]HI, I'm Block\n");
+                sprintf(msg, "[SPOT1]HI, I'm Block\n");
                 write(sock, msg, strlen(msg));
                 close(sock);
 

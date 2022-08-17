@@ -85,8 +85,8 @@ int main(int argc, char* argv[]) {
         if (serialDataAvail(fd)) {
             char newChar = serialGetchar(fd);  //fd가 핸들러임.
 
-            //if (1) {
-            if (newChar == 'S') {
+            if (1) {
+            //if (newChar == 'S') {
                 // 이미지 처리 진행
 //system(capture);
 //printf("agasdfa\n");
@@ -109,8 +109,19 @@ int main(int argc, char* argv[]) {
                     continue;
                 }
 
+                cv::Mat test1[] = { gray_img,gray_img,gray_img };
+                cv::Mat test1_merge;
+                cv::merge(test1, 3, test1_merge);
+                cv::imshow("gray_img", test1_merge);
+
+
                 cv::equalizeHist(gray_img, gray_img);
                 medianBlur(gray_img, gray_img, 3);
+
+                cv::Mat test2[] = { gray_img,gray_img,gray_img };
+                cv::Mat test2_merge;
+                cv::merge(test2, 3, test2_merge);
+                cv::imshow("After Filtering", test2_merge);
 
                 cv::Mat Canny_img;
 
@@ -238,6 +249,8 @@ int main(int argc, char* argv[]) {
                 cv::Mat Rotated_image;
                 cv::Mat cropped_image;
                 origin_img.copyTo(Rotated_image);
+                cv::equalizeHist(Rotated_image, Rotated_image);
+                medianBlur(Rotated_image, Rotated_image, 3);
                 cv::Point center1 = (carNumber[0].tl() + carNumber[0].br()) * 0.5;  // Center of the first number
                 cv::Point center2 = (carNumber[carNumber.size() - 1].tl() + carNumber[carNumber.size() - 1].br()) * 0.5;  // Center of the last number
                 int plate_center_x = (int)(center1.x + center2.x) * 0.5;    // X-coordinate at the Center of car plate
@@ -528,7 +541,7 @@ int main(int argc, char* argv[]) {
                 close(sock);
 
 
-                //cv::waitKey();
+                cv::waitKey();
 
 
                 /*

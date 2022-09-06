@@ -1,3 +1,30 @@
+//====================================================================
+// 차단기 Raspberry pi Code
+// License Plate Recognition & Compare with Database 
+// 
+// Arduino가 초음파 센서를 통해 차량을 감지하면
+// 카메라 캡쳐와 해당 이미지에서 LPR 진행
+// 
+// Tesseract OCR API 사용하여 Text 추출하고 Database와 비교하여 Vehicle Type, 비어있는 Spot 확인
+// 해당 정보로 Packet 구성하여 Arduino에게 Serial 송신
+//
+// serialGetchar : Arduino로부터 들어오는 Serial 데이터 확인
+// system(capture) :  정지된 차량 번호판 이미지 촬영
+// equalizeHist : 하늘색 배경 번호판과 검은색 글자(숫자)의 대비를 증폭하기 위한 함수
+// medianBlur : EqualHist로 인한 Impulse Noise를 제거하기 위해 사용하는 Filter 함수
+// Canny, findContours : 윤곽선 추출, 이를 기반으로 ROI(Region Of Interesting) 추출
+// getRotationMatrix2D : 회전축과 각을 매개변수로 넣으면 2차원 행렬을 반환해주는 함수.
+// warpAffine : 2차원 행렬과 이미지를 대입하면 행렬곱을 통해 새로운 이미지를 반환해주는 함수. 즉, 이미지 회전 진행.
+// erode : 침식, 모폴로지 연산 중 하나로 전기차 번호판에 있는 얇은 그림들을 제거하기 위해 사용한 함수.
+// dilate : 팽창, 모폴로지 연산 중 하나로 전기차 번호판에 있는 얇은 그림들을 제거하기 위해 사용한 함수.
+// find_number : 전처리된 영상과 Tesseract OCR API를 이용하여 Text를 반환하는 함수
+// 
+// mysql_query : MariaDB에 있는 Table과 비교, 삽입, 업데이트를 하기 위해 사용하는 함수
+// 
+//====================================================================
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,7 +78,6 @@ char capture[] = "sudo raspistill -o /home/kshksh/ksh_rasp/images/test1.jpg";
 
 int find_number(cv::Mat num_image);
 
-
 int main(int argc, char* argv[]) {
 
     MYSQL* conn;
@@ -61,7 +87,6 @@ int main(int argc, char* argv[]) {
     char in_sql[200] = { 0 };
     int sql_index, flag = 0;
     int res = 0;
-
 
     if (!(mysql_real_connect(conn, host, user, pass, dbname, 0, NULL, 0))) {
         fprintf(stderr, "ERROR : %s[%d]\n", mysql_error(conn), mysql_errno(conn));
@@ -80,16 +105,16 @@ int main(int argc, char* argv[]) {
 
     if (wiringPiSetup() == -1)
         return 1;
-
     while (1) {
+	//if(1){
         if (serialDataAvail(fd)) {
             char newChar = serialGetchar(fd);  //fd가 핸들러임.
 
             //if (1) {
             if (newChar == 'S') {
                 // 이미지 처리 진행
-//system(capture);
-//printf("agasdfa\n");
+                //system(capture);
+                //printf("agasdfa\n");
                 double ratio_d, delta_x, delta_y, gradient;
                 int select, plate_width, plate_height, count, friend_count = 0, refinery_count = 0;
 
@@ -103,15 +128,27 @@ int main(int argc, char* argv[]) {
 
                 original_width = origin_img.cols;
                 original_height = origin_img.rows;
-
                 if (gray_img.empty()) {
                     printf("Image load fail\n");
                     continue;
                 }
 
+                cv::Mat test1[] = { gray_img,gray_img,gray_img };
+                cv::Mat test1_merge;
+                cv::merge(test1, 3, test1_merge);
+                cv::imshow("gray_img", test1_merge);
+
+                cv::waitKey();
+
                 cv::equalizeHist(gray_img, gray_img);
                 medianBlur(gray_img, gray_img, 3);
 
+                cv::Mat test2[] = { gray_img,gray_img,gray_img };
+                cv::Mat test2_merge;
+                cv::merge(test2, 3, test2_merge);
+                cv::imshow("After Filtering", test2_merge);
+
+                cv::waitKey();
                 cv::Mat Canny_img;
 
                 cv::Canny(gray_img, Canny_img, 50, 150, 3);
@@ -238,6 +275,8 @@ int main(int argc, char* argv[]) {
                 cv::Mat Rotated_image;
                 cv::Mat cropped_image;
                 origin_img.copyTo(Rotated_image);
+                cv::equalizeHist(Rotated_image, Rotated_image);
+                medianBlur(Rotated_image, Rotated_image, 3);
                 cv::Point center1 = (carNumber[0].tl() + carNumber[0].br()) * 0.5;  // Center of the first number
                 cv::Point center2 = (carNumber[carNumber.size() - 1].tl() + carNumber[carNumber.size() - 1].br()) * 0.5;  // Center of the last number
                 int plate_center_x = (int)(center1.x + center2.x) * 0.5;    // X-coordinate at the Center of car plate
@@ -263,10 +302,12 @@ int main(int argc, char* argv[]) {
                 cv::warpAffine(Rotated_image, Rotated_image, rotation_matrix, cv::Size(original_width, original_height));
                 cv::imshow("Rotated", Rotated_image);
 
+                cv::waitKey();
                 cv::getRectSubPix(Rotated_image, cv::Size(plate_width, plate_height), cv::Point(plate_center_x, plate_center_y), cropped_image, -1);
                 cv::imshow("Cropped", cropped_image);
 
 
+                cv::waitKey();
                 //=============================
                 // Filtered Cropped image
                 //==============================
@@ -279,6 +320,7 @@ int main(int argc, char* argv[]) {
                 cv::merge(Merge_crop, 3, new_croped);
                 cv::imshow("Before mor", new_croped);  // Save the result
 
+                cv::waitKey();
                 //=============================
                 // Morphology Start
                 //==============================
@@ -308,6 +350,7 @@ int main(int argc, char* argv[]) {
 
                 cv::imshow("After Mop", erode_merge2);
 
+                cv::waitKey();
                 //=============================
                 // OCR Start
                 //==============================
@@ -528,7 +571,7 @@ int main(int argc, char* argv[]) {
                 close(sock);
 
 
-                //cv::waitKey();
+                cv::waitKey();
 
 
                 /*
@@ -608,4 +651,5 @@ int find_number(cv::Mat num_image) {
 
     return flag;
 }
+
 

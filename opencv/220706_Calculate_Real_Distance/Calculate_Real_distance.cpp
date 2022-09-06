@@ -59,10 +59,20 @@ void FindCircle(const sensor_msgs::ImageConstPtr& msg)
 
         cv::Mat real_img = cv_ptr->image;
         cv::Mat gray_img2;
+        cv::Mat origin_img;
+        real_img.copyTo(origin_img);
+        cv::imshow("Origin_img", origin_img);
+
         cv::cvtColor(real_img, gray_img2, cv::COLOR_BGR2GRAY);
+        medianBlur(gray_img2, gray_img2, 5);
+
+        cv::Mat test1[] = { gray_img2,gray_img2,gray_img2 };
+        cv::Mat test1_merge;
+        cv::merge(test1, 3, test1_merge);
+        cv::imshow("gray_img", test1_merge);
+
 
         //cv::medianBlur(gray_img,gray_img2,5);
-        medianBlur(gray_img2, gray_img2, 5);
         vector<cv::Vec3f> circles;
 
         cv::HoughCircles(gray_img2, circles, cv::HOUGH_GRADIENT, 1, 150, 80, 70, 0, 100);
@@ -74,7 +84,7 @@ void FindCircle(const sensor_msgs::ImageConstPtr& msg)
             tar_y = c[1];
             del_x_image = c[0] - 320;
             del_y_image = 240 - c[1];
-            cv::circle(real_img, cv::Point(c[0], c[1]), c[2], CV_RGB(255, 0, 0));
+            cv::circle(test1_merge, cv::Point(c[0], c[1]), c[2], CV_RGB(255, 0, 0),5);
             //ROS_INFO("x_circle : %d   y_circle : %d", c[0], c[1]);
 
             if (del_x_image >= 0 && del_y_image >= 0) theta_image = (atan((del_y_image * 1.0) / (del_x_image * 1.0)) * (180.0 / Pi));
@@ -92,7 +102,7 @@ void FindCircle(const sensor_msgs::ImageConstPtr& msg)
 
         //ROS_INFO("channel :  %d",  gray_img2.channels());
 
-        cv::imshow("real_img", real_img);
+        cv::imshow("Calculate Distance", test1_merge);
         //cv::imshow("gray_img1",gray_img1);
       // cv::imshow("result", res);
     //    cv::imshow("gray",gray_img);

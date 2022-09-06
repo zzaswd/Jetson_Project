@@ -82,9 +82,9 @@ int main(int argc, char *argv[]){
         return 1;
 
     while(1){
-        if(serialDataAvail(fd)){
-			char newChar = serialGetchar(fd);  //fd가 핸들러임.
-
+     //   if(serialDataAvail(fd)){
+//			char newChar = serialGetchar(fd);  //fd가 핸들러임.
+	if(1){
             if (1) {
             //if(newChar == 'S'){
 								// 이미지 처리 진행
@@ -473,7 +473,7 @@ int main(int argc, char *argv[]){
                 write(sock, msg, strlen(msg));
 
                 memset(msg, 0, sizeof(msg));
-                sprintf(msg, "[Jetson1]HI, I'm Block\n");
+                sprintf(msg, "[SPOT1]HI, I'm Block\n");
                 write(sock, msg, strlen(msg));
                 close(sock);
 

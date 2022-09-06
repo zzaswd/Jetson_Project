@@ -8,3 +8,6 @@ target_link_libraries(Capture ${OpenCV_LIBS} -lwiringPi -lmariadbclient -lmysqlc
 
 add_executable(Capture_with_socket Capture_with_socket.cpp)
 target_link_libraries(Capture_with_socket ${OpenCV_LIBS} -lwiringPi -lmariadbclient -lmysqlclient tesseract)
+
+add_executable(Capture_Inout Capture_Inout.cpp)
+target_link_libraries(Capture_Inout ${OpenCV_LIBS} -lwiringPi -lmariadbclient -lmysqlclient tesseract)

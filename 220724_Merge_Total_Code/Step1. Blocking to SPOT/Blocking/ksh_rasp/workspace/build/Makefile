@@ -130,6 +130,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named Capture_Inout
+
+# Build rule for target.
+Capture_Inout: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Capture_Inout
+.PHONY : Capture_Inout
+
+# fast build rule for target.
+Capture_Inout/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_Inout.dir/build.make CMakeFiles/Capture_Inout.dir/build
+.PHONY : Capture_Inout/fast
+
+#=============================================================================
 # Target rules for targets named Capture_with_socket
 
 # Build rule for target.
@@ -182,6 +195,33 @@ Capture.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture.dir/build.make CMakeFiles/Capture.dir/Capture.cpp.s
 .PHONY : Capture.cpp.s
 
+Capture_Inout.o: Capture_Inout.cpp.o
+
+.PHONY : Capture_Inout.o
+
+# target to build an object file
+Capture_Inout.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_Inout.dir/build.make CMakeFiles/Capture_Inout.dir/Capture_Inout.cpp.o
+.PHONY : Capture_Inout.cpp.o
+
+Capture_Inout.i: Capture_Inout.cpp.i
+
+.PHONY : Capture_Inout.i
+
+# target to preprocess a source file
+Capture_Inout.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_Inout.dir/build.make CMakeFiles/Capture_Inout.dir/Capture_Inout.cpp.i
+.PHONY : Capture_Inout.cpp.i
+
+Capture_Inout.s: Capture_Inout.cpp.s
+
+.PHONY : Capture_Inout.s
+
+# target to generate assembly for a file
+Capture_Inout.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_Inout.dir/build.make CMakeFiles/Capture_Inout.dir/Capture_Inout.cpp.s
+.PHONY : Capture_Inout.cpp.s
+
 Capture_with_socket.o: Capture_with_socket.cpp.o
 
 .PHONY : Capture_with_socket.o
@@ -218,10 +258,14 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Capture"
+	@echo "... Capture_Inout"
 	@echo "... Capture_with_socket"
 	@echo "... Capture.o"
 	@echo "... Capture.i"
 	@echo "... Capture.s"
+	@echo "... Capture_Inout.o"
+	@echo "... Capture_Inout.i"
+	@echo "... Capture_Inout.s"
 	@echo "... Capture_with_socket.o"
 	@echo "... Capture_with_socket.i"
 	@echo "... Capture_with_socket.s"

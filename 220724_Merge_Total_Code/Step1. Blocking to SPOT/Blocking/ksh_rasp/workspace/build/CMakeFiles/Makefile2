@@ -72,6 +72,7 @@ CMAKE_BINARY_DIR = /home/kshksh/ksh_rasp/workspace/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/Capture_Inout.dir/all
 all: CMakeFiles/Capture_with_socket.dir/all
 all: CMakeFiles/Capture.dir/all
 
@@ -83,10 +84,38 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/Capture_Inout.dir/clean
 clean: CMakeFiles/Capture_with_socket.dir/clean
 clean: CMakeFiles/Capture.dir/clean
 
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/Capture_Inout.dir
+
+# All Build rule for target.
+CMakeFiles/Capture_Inout.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_Inout.dir/build.make CMakeFiles/Capture_Inout.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_Inout.dir/build.make CMakeFiles/Capture_Inout.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kshksh/ksh_rasp/workspace/build/CMakeFiles --progress-num=3,4 "Built target Capture_Inout"
+.PHONY : CMakeFiles/Capture_Inout.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/Capture_Inout.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kshksh/ksh_rasp/workspace/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Capture_Inout.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kshksh/ksh_rasp/workspace/build/CMakeFiles 0
+.PHONY : CMakeFiles/Capture_Inout.dir/rule
+
+# Convenience name for target.
+Capture_Inout: CMakeFiles/Capture_Inout.dir/rule
+
+.PHONY : Capture_Inout
+
+# clean rule for target.
+CMakeFiles/Capture_Inout.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_Inout.dir/build.make CMakeFiles/Capture_Inout.dir/clean
+.PHONY : CMakeFiles/Capture_Inout.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/Capture_with_socket.dir
@@ -95,7 +124,7 @@ clean: CMakeFiles/Capture.dir/clean
 CMakeFiles/Capture_with_socket.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_with_socket.dir/build.make CMakeFiles/Capture_with_socket.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Capture_with_socket.dir/build.make CMakeFiles/Capture_with_socket.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kshksh/ksh_rasp/workspace/build/CMakeFiles --progress-num=3,4 "Built target Capture_with_socket"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kshksh/ksh_rasp/workspace/build/CMakeFiles --progress-num=5,6 "Built target Capture_with_socket"
 .PHONY : CMakeFiles/Capture_with_socket.dir/all
 
 # Build rule for subdir invocation for target.
